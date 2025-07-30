@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+{% extends "home.html" %} 
+{% load static %}
+{% load tz %}
+
+{% block main_content %}
+
+<div class="container-fluid text-center justify-content-center align-items-center" style="padding-top: 10px; padding-bottom: 20px; margin-top: 10px;">
+    <div class="row justify-content-center align-items-center" style="margin-top: 10px;height:60px;">
+        <div class="col-md-4 text-light d-flex align-items-center justify-content-center" style="background:#4B088A;">
+            <h4>Histórico de Devoluções</h4>
+        </div>
+        <div class="col-md-8 d-flex align-items-center justify-content-center">
+            <h4 style="margin-top:0;">Empréstimos Devolvidos</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="container" style="overflow-y:auto;height:600px;background:#CEECF5; padding: 20px;">
+                {% if messages %}
+                    <ul class="messages list-unstyled">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }} alert alert-{{ message.tags }} p-2 mb-2"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <h5 style="margin-top: 20px;">Informações sobre Empréstimos Devolvidos:</h5>
+                <p>Aqui você pode visualizar o histórico completo de todos os livros que foram devolvidos à biblioteca.</p>
+                <ul style="text-align: left; padding-left: 20px; margin-top: 20px;">
+                    <li><small>Esta tabela exibe todos os empréstimos que já foram marcados como 'Devolvido'.</small></li>
+                    <li><small>A data e hora exata da devolução estão registradas na coluna 'Data Devolução'.</small></li>
+                    <li><small>Para gerenciar empréstimos ativos (emprestar ou marcar como devolvido), utilize a página de <a href="{% url 'emprestimos_page' %}">Empréstimos Ativos</a>.</small></li> 
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="row">
+                <nav class="navbar bg-body-light">
+                    <div class="container-fluid d-flex justify-content-center align-items-center">
+                        <form class="d-flex" role="search" method="GET" action="{% url 'devolucao_page' %}">
+                            <input class="form-control me-2" type="search" placeholder="Buscar por Livro, Usuário..." aria-label="Search" name="query" value="{{ query|default_if_none:'' }}">
+                            <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="row" style="margin-top: 20px;">
+                <p>{{ emprestimos_devolvidos|length }} Empréstimo(s) Devolvido(s) encontrado(s).</p>
+            </div>
+
+            <div class="row" style="margin-top: 20px;">
+                <div class="container" style="overflow-y:auto;height:400px;">
+                    {% if emprestimos_devolvidos %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Livro (Título - Autor)</th>
+                                <th>Usuário </th>
+                                <th>Data Empréstimo</th>
+                                <th>Data Devolução</th> 
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emprestimo_obj in emprestimos_devolvidos %}
+                                <tr>
+                                    <td>{{ emprestimo_obj.id }}</td>
+                                    <td>
+                                        {{ emprestimo_obj.livro.titulo }} - {{ emprestimo_obj.livro.autor }}
+                                    </td>
+                                    <td>{{ emprestimo_obj.usuario.reader_name }}</td>
+                                    <td>{{ emprestimo_obj.data_emprestimo|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        {% if emprestimo_obj.data_devolucao %}
+                                            {{ emprestimo_obj.data_devolucao|date:"d/m/Y H:i" }}
+                                        {% else %}
+                                        {% endif %}
+                                    </td>
+                                    <td><span class="badge bg-success">Devolvido</span></td> 
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6">Nenhum empréstimo devolvido encontrado no histórico.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                        <p class="text-center mt-4">Nenhum empréstimo foi devolvido ainda.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

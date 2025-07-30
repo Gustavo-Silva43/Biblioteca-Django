@@ -1,0 +1,40 @@
+{% extends "home.html" %} 
+{% load static %}
+
+{% block main_content %}
+<div class="container mt-5">
+    <h2>Editar Usuário: {{ usuario.reader_name }}</h2>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="reader_name" class="form-label">Nome do Leitor:</label>
+            <input type="text" class="form-control" id="reader_name" name="reader_name" value="{{ usuario.reader_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="contact" class="form-label">Contato:</label>
+            <input type="text" class="form-control" id="contact" name="contact" value="{{ usuario.contact }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Endereço:</label>
+            <input type="text" class="form-control" id="address" name="address" value="{{ usuario.address }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">E-mail:</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="{% url 'usuarios_page' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% extends "index.html" %}
+{% load static%}
+
+{% block main_content %}
+<main role="main ">
+{% comment %} <div class="jumbotron"> {% endcomment %}
+    <div class="container">
+        <img src="{%static 'logo copy.jpg' %}" class="rounded float-start" alt="logo" height="200" style="margin-right: 10px;">
+        <h1 class="display-4">Olá Usuário!</h1>
+        <p> Bem-vindo à Biblioteca . Dispomos de uma vasta coleção de livros para satisfazer as necessidades de leitura de muitos leitores.</p>
+        <p><a role="button" href="{% url 'books_page' %}" class="btn btn-primary"> Navegar na nossa coleção >></a></P>
+    </div>
+</div>
+
+<div class="container">
+  <div class="row">
+     <div class="col">
+        <h2>Porque é que a leitura é importante?</h2>
+        <p>Ler é bom para si porque melhora a concentração, a memória, a empatia e as capacidades de comunicação. Pode reduzir o stress, melhorar a sua saúde mental e ajudá-lo a viver mais tempo. A leitura também lhe permite aprender coisas novas para o ajudar a ter sucesso no seu trabalho e nas suas relações.</p>
+     </div>
+     <div class="col">
+        <h2>Principais benefícios</h2>
+        <ul>
+            <li> Aumentar o seu vocabulário e capacidade de compreensão</li>
+            <li> Reduzir o stress </li>
+            <li> Melhorar a saúde mental </li>
+            <li>Previne o declínio cognitivo</li>
+        </ul>
+     </div>
+     <div class="col">
+        <h2>Pensamento do dia!</h2>
+        <p>Não desistam de tentar fazer o que realmente querem fazer. Onde há amor e inspiração, acho que não se pode errar." - Ella Fitzgerald</p>
+     </div>
+    </div>
+      <hr>
+</div> 
+    </main>
+<footer class="container d-flex justify-content-center align-items-center">
+     <p class="me-3">© City Library 2025</p>
+    <a role="button" href="{% url 'logout_page' %}" class="btn btn-primary"> Sair</a>
+</footer>
+{% endblock %}  

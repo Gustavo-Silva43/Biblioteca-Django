@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+{% extends "home.html" %} 
+{% load static %}
+
+{% block main_content %} 
+<div class="container-fluid text-center justify-content-center align-items-center" style="padding-top: 10PX; padding-bottom: 20px; margin-top: 10px;vertical-align:middle;">
+    <div class="row justify-content-center align-middle" style="margin-top: 10px;height:60px;">
+        <div class="col-md-4 text-light" style="background:#4B088A;">
+            <h4>Realizar Novo Empréstimo</h4>
+        </div>
+        <div class="col-md-8">
+            <h4 style="margin-top:15px">Empréstimos Ativos</h4>
+        </div> 
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="container" style="overflow-y:auto;height:600px;background:#CEECF5">
+                
+                {% if messages %}
+                    <ul class="messages list-unstyled"> 
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }} alert alert-{{ message.tags }} p-2 mb-2"{% endif %}>
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <form class="d-flex flex-column" action="{% url 'realizar_emprestimo' %}" method="post" style="margin-top: 20px;">
+                    {% csrf_token %}
+
+                    <div class="form-group mb-3">
+                        <label for="livro_id" style="text-align: left; display: block; margin-bottom: 5px;">Selecione o Livro:</label>
+                        <select name="livro_id" id="livro_id" class="form-control" required>
+                            <option value="">-- Escolha um livro --</option>
+                            {% for livro in livros %} 
+                                <option value="{{ livro.id }}">{{ livro.titulo }} ({{ livro.autor }})</option>
+                            {% empty %}
+                                <option value="" disabled>Nenhum livro disponível</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="usuario_id" style="text-align: left; display: block; margin-bottom: 5px;">Selecione o Usuário:</label>
+                        <select name="usuario_id" id="usuario_id" class="form-control" required>
+                            <option value="">-- Escolha um usuário --</option>
+                            {% for usuario in usuarios %} 
+                                <option value="{{ usuario.id }}">{{ usuario.reader_name }} (ID: {{ usuario.id }})</option>
+                            {% empty %}
+                                <option value="" disabled>Nenhum usuário cadastrado</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary mt-3" type="submit">Emprestar Livro</button>
+                </form>
+                
+                <ul style="text-align: left;vertical-align:middle; padding-left: 15px; margin-top: 20px;">
+                    <li><small>Verifique a disponibilidade do livro antes de emprestar.</small></li>
+                    <li><small>Certifique-se de selecionar o livro e o usuário corretos.</small></li>
+                    <li><small>Registros de empréstimo são importantes para o controle da biblioteca.</small></li>
+                </ul> 
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="row">
+                <nav class="navbar bg-body-light">
+                    <div class="container-fluid d-flex justify-content-center align-items-center">
+                        <form class="d-flex" role="search" method="GET" action="{% url 'pesquisar_emprestimos' %}">
+                            {% csrf_token %} 
+                            <input class="form-control me-2" type="search" placeholder="Buscar por Livro, Usuário..." aria-label="Search" name="query" value="{{ query|default_if_none:'' }}">
+                            <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+            
+            <div class="row" style="margin-top: 20px;">
+                <p>{{ emprestimos_ativos|length }} Empréstimo(s) Ativo(s).</p> 
+            </div> 
+
+            <div class="row" style="margin-top: 20px;">
+                <div class="container" style="overflow-y:auto;height:400px;">
+                    {% if emprestimos_ativos %} 
+                    <table class="table table-hover"> 
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Livro</th> 
+                                <th>Usuário</th> 
+                                <th>Data Empréstimo</th> 
+                                <th>Status</th> 
+                                <th>Ações</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emprestimo_obj in emprestimos_ativos %} 
+                                <tr>
+                                    <td>{{ emprestimo_obj.id }}</td> 
+                                    <td>{{ emprestimo_obj.livro.titulo }} - {{ emprestimo_obj.livro.autor}}</td> 
+                                    <td>{{ emprestimo_obj.usuario.reader_name}} - {{ emprestimo_obj.usuario.contact }}</td> 
+                                    <td> {{emprestimo_obj.data_emprestimo|date:"d/m/Y H:i"}}</td> 
+                                    <td>
+                                        {% if emprestimo_obj.devolvido %}
+                                            <span class="badge bg-success">Devolvido</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">Emprestado</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <form method="post" action="{% url 'devolver_emprestimo' emprestimo_obj.id %}" style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-success">Devolver</button>
+                                        </form>
+                                        <a href="{% url 'editar_emprestimo' emprestimo_obj.id %}" class="btn btn-sm btn-info">Editar</a>
+                                        
+                                    </td>
+                                </tr>
+                            {% empty %} 
+                                <tr>
+                                    <td colspan="6">Nenhum empréstimo ativo encontrado.</td> 
+                                </tr>
+                            {% endfor %} 
+                        </tbody>
+                    </table>
+                    {% endif %} 
+                </div> 
+            </div>
+        </div> 
+    </div> 
+</div> 
+{% endblock %}

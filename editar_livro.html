@@ -1,0 +1,50 @@
+{% extends "home.html"%}
+{% load static %}
+
+{% block main_content %}
+
+<div class="container mt-5">
+    <h2>Editar Livro: {{ livro.titulo }} </h2>
+
+    {% if messages %}
+        <ul class="messages list-unstyled">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags}} alert alert-{{message.tags}} p-2 mb-2"{% endif %}>
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Título:</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" value="{{livro.titulo}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="autor" class="form-label">Autor:</label>
+            <input type="text" class="form-control" id="autor" name="autor" value="{{ livro.autor}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="ano_publicacao" class="form-label">Ano de Publicação</label>
+            <input type="number" class="form-control" id="ano_publicacao" name="ano_publicacao" value="{{livro.ano_publicacao|default_if_none:''}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="genero" class="form-label">Gênero</label>
+            <input type="text" class="form-control" id="genero" name="genero" value="{{livro.genero|default_if_none:''}}">
+        </div>
+
+        <div class="mb-3"> 
+            <label for="disponivel" class="form-label">Disponibilidade:</label>
+            <select class="form-control" id="disponivel" name="disponivel">
+                <option value="True" {% if livro.disponivel %} selected{% endif %}>Disponível</option>
+                <option value="False" {% if not livro.disponivel %}selected{% endif %}>Não Disponível</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="{% url 'books_page' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+{% extends "home.html" %} 
+{% load static %}
+
+{% block main_content %}
+
+<div class="container-fluid text-center justify-content-center align-items-center" style="padding-top: 10px; padding-bottom: 20px; margin-top: 10px;"> 
+    <div class="row justify-content-center align-middle" style="margin-top: 10px;height:60px;">
+        <div class="col-md-4 text-light" style="background:#4B088A;">
+            <h4>Registrar Novo Livro</h4>
+        </div>
+        <div class="col-md-8">
+            <h4 style="margin-top:15px">Pesquisar Livros</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="container" style="overflow-y:auto;height:600px;background:#CEECF5">
+                
+                {% if messages %}
+                    <ul class="messages list-unstyled">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }} alert alert-{{ message.tags }} p-2 mb-2"{% endif %}>
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <form class="d-flex flex-column align-items-center" action="{% url 'salvar_livro' %}" method="POST"> 
+                    {% csrf_token %}
+                    <table class="table" style="margin-top: 20px;">
+                        <tr>
+                            <td style="text-align: left;vertical-align:middle; padding-left: 15px;">Título: </td>
+                            <td><input type="text" class="form-control" name="titulo" required></td> 
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;vertical-align:middle; padding-left: 15px;">Autor: </td>
+                            <td><input type="text" class="form-control" name="autor" required></td> 
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;vertical-align:middle; padding-left: 15px">Ano Publicação:</td>
+                            <td><input type="number" class="form-control" name="ano_publicacao"></td> 
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;vertical-align:middle; padding-left: 15px;">Gênero: </td>
+                            <td><input type="text" class="form-control" name="genero"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button class="btn btn-primary" type="submit">Salvar Livro</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="row">
+                <nav class="navbar bg-body-light">
+                    <div class="container-fluid d-flex justify-content-center align-items-center"> 
+                        <form class="d-flex" role="search" method="GET" action="{% url 'books_page' %}">
+                            {% csrf_token %} 
+                            <input class="form-control me-2" type="search" placeholder="Buscar por Título ou Autor" aria-label="Search" name="query" value="{{ query|default_if_none:'' }}"/>
+                            <button class="btn btn-outline-primary" type="submit">Pesquisar Livro</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <p>{{ livros|length }} Livros Cadastrados.</p>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="container" style="overflow-y:auto;height:400px;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Ano Publicação</th>
+                                <th>Gênero</th>
+                                <th>Disponível</th> 
+                                <th>Ações</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for livro_obj in livros %}
+                                <tr>
+                                    <td>{{ livro_obj.id }}</td>
+                                    <td>
+                                        <a href="{% url 'editar_livro' livro_obj.id %}" class="btn btn-info btn-sm">
+                                            {{ livro_obj.titulo }}
+                                        </a>
+                                    </td>
+                                    <td>{{ livro_obj.autor }}</td> 
+                                    <td>{{ livro_obj.ano_publicacao|default_if_none:"N/A" }}</td>
+                                    <td>{{ livro_obj.genero|default_if_none:"N/A" }}</td>
+                                    <td>
+                                        {% if livro_obj.disponivel %} 
+                                            <span class="badge bg-success">Sim</span> 
+                                        {% else %}
+                                            <span class="badge bg-danger">Não</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                    {% if request.user.tipo_usuario == 'admin' %} 
+                                        {% if livro_obj.id %} 
+                                            <form action="{% url 'excluir_livro' livro_obj.id %}" method="post" style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir o livro {{ livro_obj.titulo }}?');">Excluir</button>
+                                            </form>
+                                        {% else %}
+                                            <span class="text-danger">ID ausente</span>
+                                        {% endif %}
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="7">Nenhum livro cadastrado.</td> 
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div> 
+    </div> 
+</div> 
+{% endblock %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        {% comment %} .my_label{
+           font-size:20px;
+        }
+        .my_secondary_label{
+            color:blue;
+            font-size:20px;
+        } {% endcomment %}
+    </style>
+    <meta charset="UTF-8">
+    <title>Biblioteca</title>
+</head>
+<body>
+    
+
+<h1>Bem-vindo à nossa biblioteca</h1>
+<form method="POST" action="/save/">
+        {% csrf_token%}
+    <table>
+        <tbody>
+             <tr>
+                <td><label class="my_label">Nome</label></td>
+                <td><input type="text" name="Nome"></td>
+            </tr>
+            <tr >
+                <td><label class=".my_secondary_label">idade</label></td>
+                <td><input type="text" name="idade"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><button type="submit" style="display:block;margin-top:15px;margin-bottom:15px;font-size: 20px; width:100%;">Salvar</button></td>
+            </tr>   
+        </tbody>
+    </table>
+
+</form>
+<br>
+<button onclick="window.location.href='/shop'" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Shopping</button>
+</body>
+</html>

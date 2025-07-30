@@ -1,0 +1,132 @@
+{% extends "home.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block main_content %}
+
+<div class="container-fluid text-center justify-content-center align-items-center" style="padding-top: 10PX; padding-bottom: 20px; margin-top: 10px;vertical-align:middle;">
+    <div class="row justify-content-center align-middle" style="margin-top: 10px;height:60px;">
+        <div class="col-md-4 text-light" style="background:#4B088A;">
+            <h4>Adicionar Novo Usuário</h4> 
+        </div>
+        <div class="col-md-8">
+            <h4 style="margin-top:15px">Pesquisar Usuários</h4> 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="container" style="overflow-y:auto;height:600px;background:#CEECF5">
+                
+                {% if messages %}
+                    <ul class="messages list-unstyled pt-3"> 
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }} alert alert-{{ message.tags }} p-2 mb-2"{% endif %}>
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <form class="d-flex flex-column" action="{% url 'salvar_usuario' %}" method="POST" style="margin-top: 20px;">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="mb-3 text-start"> 
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
+                            {% if field.field.widget.input_type == 'password' %}
+                                {{ field|add_class:"form-control"|attr:"type:password" }}
+                            {% else %}
+                                {{ field|add_class:"form-control" }} 
+                            {% endif %}
+                            
+                            {% if field.help_text %}
+                                <div class="form-text text-muted">{{ field.help_text }}</div>
+                            {% endif %}
+                            
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger mt-3">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <button class="btn btn-primary mt-3" type="submit">Salvar Usuário</button> 
+                </form>
+
+                <ul style="text-align: left; vertical-align: middle; padding-left: 15px; margin-top: 20px;">
+                    <li><small>Preencha todos os dados obrigatórios para o usuário.</small></li>
+                    <li><small>A senha deve ser confirmada.</small></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <nav class="navbar bg-body-light">
+                    <div class="container-fluid d-flex justify-content-center align-items-center">
+                        <form class="d-flex" role="search" method="GET" action="{% url 'usuarios_page' %}"> 
+                            <input class="form-control me-2" type="search" placeholder="Buscar por Nome, E-mail, Login..." aria-label="Search" name="query" value="{{ query|default_if_none:'' }}"/>
+                            <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <p>{{ usuarios|length }} Usuário(s) Cadastrado(s).</p> 
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="container" style="overflow-y:auto;height:400px;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome Completo</th> 
+                                <th>Contato</th>
+                                <th>Endereço</th>
+                                <th>E-mail</th>
+                                <th>Tipo</th> 
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario_obj in usuarios %} 
+                                    <td>{{ usuario_obj.id }}</td>
+                                    <td>
+                                        <a href="{% url 'editar_usuario' usuario_obj.id %}" class="btn btn-success btn-sm"> 
+                                            {{ usuario_obj.reader_name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ usuario_obj.reader_contact|default:"N/A" }}</td>
+                                    <td>{{ usuario_obj.reader_address|default:"N/A" }}</td>
+                                    <td>{{ usuario_obj.email|default:"N/A" }}</td>
+                                    <td>{{ usuario_obj.get_tipo_usuario_display }}</td> 
+                                    <td>
+                                        <form action="{% url 'excluir_usuario' usuario_obj.id %}" method="post" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                     onclick="return confirm('Tem certeza que deseja excluir o usuário {{ usuario_obj.reader_name }}?');">
+                                                        Excluir
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="7">Nenhum usuário cadastrado.</td> 
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

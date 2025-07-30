@@ -1,0 +1,59 @@
+{% extends "home.html" %} 
+{% load static %}
+
+{% block main_content %}
+<div class="container mt-5">
+    <h2>Editar Empréstimo (ID: {{ emprestimo.id }})</h2>
+
+    {% if messages %}
+        <ul class="messages list-unstyled">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }} alert alert-{{ message.tags }} p-2 mb-2"{% endif %}>
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="livro_id" class="form-label">Livro:</label>
+            <select name="livro_id" id="livro_id" class="form-control" required>
+                <option value="">-- Selecione o Livro --</option>
+                {% for livro_opt in livros %}
+                    <option value="{{ livro_opt.id }}" {% if livro_opt.id == emprestimo.livro.id %}selected{% endif %}>
+                        {{ livro_opt.titulo }} ({{ livro_opt.autor }}) - {% if livro_opt.disponivel %}Disponível{% else %}Emprestado{% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+            <small class="form-text text-muted">Apenas livros disponíveis ou o livro atualmente emprestado são listados.</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="usuario_id" class="form-label">Usuário:</label>
+            <select name="usuario_id" id="usuario_id" class="form-control" required>
+                <option value="">-- Selecione o Usuário --</option>
+                {% for usuario_opt in usuarios %}
+                    <option value="{{ usuario_opt.id }}" {% if usuario_opt.id == emprestimo.usuario.id %}selected{% endif %}>
+                        {{ usuario_opt.reader_name }} (ID: {{ usuario_opt.id }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="devolvido" class="form-label">Status de Devolução:</label>
+            <select class="form-control" id="devolvido" name="devolvido">
+                <option value="True" {% if emprestimo.devolvido %}selected{% endif %}>Devolvido</option>
+                <option value="False" {% if not emprestimo.devolvido %}selected{% endif %}>Emprestado (Ativo)</option>
+            </select>
+            <small class="form-text text-muted">Marcar como 'Devolvido' registrará a data e hora da devolução (se ainda não registrada).</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="{% url 'emprestimos_page' %}" class="btn btn-secondary">Cancelar</a> 
+    </form>
+</div>
+{% endblock %}

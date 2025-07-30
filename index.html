@@ -1,0 +1,76 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <nav class="navbar bg-body-tertiary">
+      <div class="container-fluid justify-content-center align-items-center" style="background-color:#0000FF">
+        <span class="navbar-brand lb-1 h3 text-light">
+            <img src="{%static 'logo.jpg' %}" alt="logo" height="45" style="margin-right: 10px;">
+            Biblioteca</span>       
+      </div>
+    </nav>
+<nav>
+<div class="container-fluid d-flex justify-content-center align-items-center altura-tela bg-light">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+          {% if current_tab == 'home' %}
+            <a class="nav-link active" aria-current="page" href="/home">Pagina Inicial</a>
+          {%else%}
+            <a class="nav-link " aria-current="page" href="/home">Pagina Inicial</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          {% if current_tab == 'usuario' %}
+            <a class="nav-link active" aria-current="page" href="/usuario/">Usuários</a>                         
+          {% else %}
+            <a class="nav-link " aria-current="page" href="/usuario/">Usuários</a>       
+          {% endif %}                    
+
+        </li>
+          <li class="nav-item">
+          {% if current_tab == 'books' %}
+            <a class="nav-link active" aria-current="page" href="/books/">Livros</a>                         
+          {% else %}
+            <a class="nav-link " aria-current="page" href="/books/">Livros</a>       
+          {% endif %}                    
+
+        </li>
+        <li class="nav-item">
+          {% if current_tab == 'emprestimo' %}
+            <a class="nav-link active" aria-current="page" href="/emprestimo/">Empréstimo</a>                         
+          {% else %}
+            <a class="nav-link " aria-current="page" href="/emprestimo/">Empréstimo</a>       
+          {% endif %}                    
+
+        </li>
+       <li class="nav-item">
+          {% if current_tab == 'devolucao' %}
+            <a class="nav-link active" aria-current="page" href="/devolucao/">Devolução</a>                         
+          {% else %}
+            <a class="nav-link " aria-current="page" href="/devolucao/">Devolução</a>       
+          {% endif %}                    
+
+        </li>
+    </ul>
+</div>
+ </nav>
+    {% block main_content %}
+    {% endblock %}  
+  </body>
+</html>
+
+
+

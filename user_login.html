@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Biblioteca</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5; /* Um cinza claro suave para o fundo geral */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .login-greeting {
+            background-color: black !important; /* Use !important para garantir a prioridade, se necessário /
+            color: white; / Opcional: mudar a cor do texto para branco para melhor contraste */
+            }
+        .login-wrapper {
+            background-color: #ffffff;
+            border-radius: 12px; /* Mais arredondado */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Sombra mais suave e proeminente */
+            overflow: hidden; /* Garante que as bordas arredondadas funcionem nas divisões internas */
+            display: flex; /* Habilita flexbox para as colunas */
+            max-width: 900px; /* Largura total do container */
+            width: 100%;
+            min-height: 500px; /* Altura mínima para o container de login */
+        }
+        .left-panel {
+            background-color: #3f6ad8; /* Um azul mais vibrante */
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex: 1; /* Ocupa o espaço disponível */
+            min-width: 300px; /* Largura mínima para o painel esquerdo */
+        }
+        .left-panel h1 {
+            font-size: 2.8rem; /* Tamanho maior para "Hello, Welcome!" */
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        .left-panel p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .btn-register-left {
+            background-color: #ffffff; /* Botão branco */
+            color: #3f6ad8; /* Texto azul */
+            border: 2px solid #ffffff; /* Borda branca */
+            padding: 12px 30px;
+            border-radius: 30px; /* Bem arredondado */
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-register-left:hover {
+            background-color: #e0e0e0; /* Um pouco mais escuro ao passar o mouse */
+            color: #2a4aa6; /* Texto um pouco mais escuro */
+            transform: translateY(-2px); /* Pequeno efeito de elevação */
+        }
+
+        .right-panel {
+            padding: 40px;
+            flex: 1; /* Ocupa o espaço disponível */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 350px; /* Largura mínima para o painel direito */
+        }
+        .right-panel h2 {
+            margin-bottom: 35px; /* Mais espaço abaixo do título */
+            text-align: center;
+            color: #343a40;
+            font-weight: 600;
+            font-size: 2.2rem;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px; /* Mais espaço entre label e input */
+            color: #555;
+        }
+        .form-control {
+            border-radius: 8px; /* Cantos arredondados nos campos */
+            padding: 12px 15px; /* Padding maior nos campos */
+            font-size: 1.05rem;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #3f6ad8; /* Borda azul ao focar */
+            box-shadow: 0 0 0 0.25rem rgba(63, 106, 216, 0.25); /* Sombra azul ao focar */
+        }
+        .mb-3 {
+            margin-bottom: 25px; /* Mais espaço entre os grupos de formulário */
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 15px; /* Padding maior no botão */
+            font-size: 1.2rem; /* Fonte maior no botão */
+            border-radius: 8px;
+            background-color: #3f6ad8; /* Cor primária do botão */
+            border-color: #3f6ad8;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #2a4aa6; /* Azul mais escuro ao passar o mouse */
+            border-color: #2a4aa6;
+            transform: translateY(-2px); /* Pequeno efeito de elevação */
+        }
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+        .messages li {
+            padding: 12px 20px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            border: 1px solid transparent; /* Adiciona uma borda padrão */
+        }
+        .messages .success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .messages .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        .messages .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-color: #bee5eb;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 25px; /* Mais espaço acima do link de registro */
+            font-size: 0.95rem;
+            color: #666;
+        }
+        .register-link a {
+            color: #3f6ad8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .register-link a:hover {
+            color: #2a4aa6;
+            text-decoration: underline;
+        }
+
+        /* Responsividade para telas menores */
+        @media (max-width: 768px) {
+            .login-wrapper {
+                flex-direction: column; /* Pilha as colunas em telas menores */
+                max-width: 450px; /* Reduz a largura máxima */
+            }
+            .left-panel, .right-panel {
+                width: 100%; /* Ocupa a largura total */
+                min-width: unset; /* Remove largura mínima */
+            }
+            .left-panel {
+                border-radius: 12px 12px 0 0; /* Arredonda só o topo */
+                padding: 30px;
+            }
+            .right-panel {
+                border-radius: 0 0 12px 12px; /* Arredonda só a base */
+                padding: 30px;
+            }
+        }
+     </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="left-panel">
+            <h1>Olá, Bem-vindo(a)!</h1>
+        </div>
+        
+        <div class="right-panel">
+            <h2>Biblioteca</h2>
+
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <form method="post" action="{% url 'login_page' %}">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.login.id_for_label }}" class="form-label">Login</label>
+                    <input type="text" 
+                           class="form-control {% if form.login.errors %}is-invalid{% endif %}" 
+                           id="{{ form.login.id_for_label }}" 
+                           name="{{ form.login.name }}" 
+                           value="{{ form.login.value|default_if_none:'' }}" 
+                           {% if form.login.field.required %}required{% endif %}>
+                    {% if form.login.errors %}
+                        {% for error in form.login.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.password.id_for_label }}" class="form-label">Senha</label>
+                    <input type="password" 
+                           class="form-control {% if form.password.errors %}is-invalid{% endif %}" 
+                           id="{{ form.password.id_for_label }}" 
+                           name="{{ form.password.name }}"       
+                           {% if form.password.field.required %}required{% endif %}> 
+                    {% if form.password.errors %} 
+                        {% for error in form.password.errors %} 
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Entrar</button>
+            </form>
+
+            {% comment %} <div class="register-link">
+                <p>Ainda não tem uma conta? <a href="{% url 'register_page' %}">Registre-se aqui</a></p>
+            </div> {% endcomment %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
